@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <img src="{{ url_for('uploaded_file', filename=product.image) }}" class="img-fluid rounded" alt="{{ product.name }}">
+    </div>
+    <div class="col-md-6">
+        <h2>{{ product.name }}</h2>
+        <p><strong>قیمت:</strong> {{ product.price }} تومان</p>
+        <p><strong>دسته‌بندی:</strong> {{ product.category }}</p>
+        <hr>
+        <h5>توضیحات:</h5>
+        <p class="text-muted">{{ product.description or "توضیحی ثبت نشده." }}</p>
+
+        <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST">
+            <button class="btn btn-success mt-3">➕ افزودن به سبد</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+

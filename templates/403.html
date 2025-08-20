@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}دسترسی غیرمجاز{% endblock %}
+{% block content %}
+<div class="alert alert-danger mt-4 text-center">
+    <h4>🚫 دسترسی غیرمجاز</h4>
+    <p>شما مجاز به مشاهده این صفحه نیستید.</p>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-primary mt-3">بازگشت به داشبورد</a>
+</div>
+{% endblock %}

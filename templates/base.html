@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}پنل مدیریت{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+    <style>
+:root {
+  --primary-color: #2c3e50;
+  --accent-color: #ff5722;
+  --light-bg: #f8f9fa;
+  --card-radius: 16px;
+}
+
+body {
+  background: var(--light-bg);
+  color: var(--primary-color);
+  font-family: "Vazir", sans-serif;
+}
+
+.navbar {
+  background-color: var(--primary-color) !important;
+}
+
+.navbar-brand, .nav-link, .btn-outline-light {
+  color: #fff !important;
+}
+
+.btn-primary {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+.btn-primary:hover {
+  background-color: #e64a19;
+  border-color: #e64a19;
+}
+
+.card {
+  border: none;
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  }
+}
+
+.card-img-top {
+  height: 200px;
+  object-fit: cover;
+}
+
+.card-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-bottom: .5rem;
+}
+
+.card-text {
+  font-size: 0.95rem;
+}
+
+.btn {
+  border-radius: 8px;
+}
+
+.alert {
+  font-size: .9rem;
+  border-radius: 8px;
+  padding: .75rem 1rem;
+}
+
+.table th, .table td {
+  vertical-align: middle;
+}
+
+.table-responsive {
+  margin-top: 1rem;
+}
+
+@media (max-width: 576px) {
+  body { font-size: 14px; }
+  h2, h3, h4 { font-size: 1.2rem; }
+  .btn { font-size: 14px; padding: .5rem; }
+  .table th, .table td { font-size: .85rem; padding: .4rem; }
+}
+</style>
+
+    <style>
+        .product-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+        .bazaar-cart {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: #fb8c00;
+            border-radius: 12px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            cursor: pointer;
+        }
+        .bazaar-cart::before {
+            content: "";
+            position: absolute;
+            top: 12px;
+            width: 40px;
+            height: 24px;
+            border: 3px solid #333;
+            border-radius: 3px;
+            background: none;
+        }
+        .bazaar-cart::after {
+            content: "";
+            position: absolute;
+            bottom: 10px;
+            width: 8px;
+            height: 8px;
+            background: #333;
+            border-radius: 50%;
+            box-shadow: 20px 0 0 #333;
+        }
+        .bazaar-cart .badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background: #d32f2f;
+            color: white;
+            font-size: 12px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        body {
+            background: #f8f9fa;
+            font-family: "Vazir", sans-serif;
+        }
+        .card {
+            border-radius: 12px;
+        }
+        .btn {
+            border-radius: 8px;
+        }
+        body {
+    background: linear-gradient(to bottom right, #fdfbfb, #ebedee);
+    font-family: "Vazir", sans-serif;
+    direction: rtl;
+    color: #333;
+}
+
+.navbar {
+    background-color: #2c3e50 !important;
+    padding: 0.8rem 1.5rem;
+}
+
+.card {
+    border: none;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  }
+}
+
+
+.card-img-top {
+    height: 220px;
+    object-fit: cover;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.btn {
+    border-radius: 12px;
+    padding: 0.5rem 1rem;
+}
+
+.alert {
+    font-size: 0.95rem;
+    border-radius: 12px;
+    padding: 1rem;
+}
+
+.bazaar-cart {
+    background: linear-gradient(45deg, #ff9800, #ff5722);
+    transition: all 0.3s ease;
+}
+
+.bazaar-cart:hover {
+    transform: scale(1.1);
+}
+.product-full-image {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-bottom: 1px solid #f1f1f1;
+    background-color: #fff;
+}
+.card {
+    min-height: 400px;
+}
+.product-full-image {
+    width: 100%;
+    max-height: 220px;
+    object-fit: contain;
+    background-color: #fff;
+}
+
+    </style>
+
+<style>
+.full-image {
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+}
+</style>
+<style>
+.product-full-image {
+    width: 100%;
+    max-height: 220px;
+    object-fit: contain;
+    background-color: #fff;
+}
+</style>
+
+</head>
+<script>
+    const toastList = [].slice.call(document.querySelectorAll('.toast'));
+    toastList.map(toastEl => new bootstrap.Toast(toastEl).show());
+</script>
+
+<body>
+<!--<button class="btn btn-outline-light" onclick="document.body.classList.toggle('dark-mode')">🌙 حالت شب</button>-->
+
+<style>
+.dark-mode, .dark-mode * {
+  background-color: #121212 !important;
+  color: #f1f1f1 !important;
+}
+
+.dark-mode .card {
+    background-color: #1e1e1e !important;
+    color: #ccc;
+}
+
+.dark-mode a {
+  color: #4ea8de; /* آبی روشن‌تر */
+}
+.dark-mode a:hover {
+  color: #90cdf4;
+}
+
+@media (max-width: 576px) {
+  body {
+    font-size: 15px;
+  }
+
+  h2, h3, h4 {
+    font-size: 18px;
+  }
+
+  .btn {
+    font-size: 14px;
+    padding: 0.4rem 0.8rem;
+  }
+}
+
+</style>
+<!--<button class="btn btn-dark dark-mode-toggle" onclick="document.body.classList.toggle('dark-mode')">🌙</button>-->
+
+<style>
+@media (max-width: 576px) {
+  .dark-mode-toggle {
+    position: fixed;
+    bottom: 90px;
+    left: 20px;
+    z-index: 999;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+headers: {
+  'Content-Type': 'application/json',
+  'X-CSRFToken': '{{ csrf_token() }}'
+}
+
+</style>
+
+
+{% if current_user.is_authenticated and request.endpoint not in ['login', 'register'] %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-sm sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold fs-5" href="{{ url_for('dashboard') }}">🛍️ فروشگاه انلاین</a>
+            <div class="d-flex gap-2">
+                <a href="{{ url_for('shop') }}" class="btn btn-outline-light">فروشگاه</a>
+                <a href="{{ url_for('view_cart') }}" class="btn btn-light position-relative">
+                    🛒 سبد خرید
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {{ cart_count }}
+                    </span>
+                </a>
+                <a href="{{ url_for('logout') }}" class="btn btn-outline-light">🚪 خروج</a>
+                <a href="{{ url_for('view_cart') }}" class="bazaar-cart">
+        <div class="badge">{{ cart_count }}</div>
+    </a>
+                <button class="btn btn-dark dark-mode-toggle" onclick="document.body.classList.toggle('dark-mode')">🌙</button>
+
+            </div>
+        </div>
+    </nav>
+</nav>
+{% endif %}
+<meta name="csrf-token" content="{{ csrf_token() }}">
+const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+<div class="container mt-4">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+
+    {% block content %}{% endblock %}
+</div>
+
+<a href="{{ url_for('view_cart') }}" class="bazaar-cart">
+    <div class="badge">{{ cart_count }}</div>
+</a>
+
+
+<!-- در base.html -->
+...
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+</body>
+</html>
+

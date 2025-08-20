@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}❤️ علاقه‌مندی‌ها{% endblock %}
+
+{% block content %}
+<h3 class="mb-4 text-center">❤️ لیست علاقه‌مندی‌ها</h3>
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+  {% for product in favorites %}
+  <div class="col">
+    <div class="card h-100 shadow-sm">
+      <img src="{{ url_for('uploaded_file', filename=product.image) }}" class="card-img-top" alt="{{ product.name }}">
+      <div class="card-body">
+        <h5 class="card-title">{{ product.name }}</h5>
+        <p class="card-text text-muted">{{ product.category }}</p>
+        <p class="card-text fw-bold text-success">{{ product.price }} تومان</p>
+        <form action="{{ url_for('remove_from_favorite', product_id=product.id) }}" method="POST">
+          <button class="btn btn-sm btn-danger w-100">🗑️ حذف از علاقه‌مندی</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <p>هیچ محصولی در لیست علاقه‌مندی نیست.</p>
+  {% endfor %}
+</div>
+{% endblock %}

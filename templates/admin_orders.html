@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>مدیریت سفارشات</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>شناسه سفارش</th>
+      <th>کاربر</th>
+      <th>تاریخ</th>
+      <th>مبلغ</th>
+      <th>وضعیت</th>
+      <th>محصولات</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for order in orders %}
+    <tr>
+      <td>{{ order.id }}</td>
+      <td>{{ order.user.username }}</td>
+      <td>{{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+      <td>{{ order.total_price }} تومان</td>
+      <td>
+  <form method="POST" action="{{ url_for('update_order_status', order_id=order.id) }}">
+    <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+      {% for status in ['در انتظار', 'در حال پردازش', 'ارسال شده', 'لغو شده'] %}
+      <option value="{{ status }}" {% if order.status == status %}selected{% endif %}>{{ status }}</option>
+      {% endfor %}
+    </select>
+  </form>
+</td>
+
+      <td>
+        <ul>
+          {% for item in order.items %}
+          <li>{{ item.product.name }} (x{{ item.quantity }})</li>
+          {% endfor %}
+        </ul>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

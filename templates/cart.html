@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}سبد خرید{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">🛒 سبد خرید</h2>
+
+  {% if items %}
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle">
+
+      <thead class="table-light">
+        <tr class="text-center">
+          <th>تصویر</th>
+          <th>نام محصول</th>
+          <th>تعداد</th>
+          <th>قیمت واحد</th>
+          <th>قیمت کل</th>
+          <th>حذف</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+        <tr class="text-center">
+          <td>
+            {% if item.product.image %}
+              <img src="{{ url_for('uploaded_file', filename=item.product.image) }}" width="60" class="rounded">
+            {% else %}
+              <img src="{{ url_for('static', filename='no-image.png') }}" width="60" class="rounded">
+            {% endif %}
+          </td>
+          <td>{{ item.product.name }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>{{ item.product.price }} تومان</td>
+          <td>{{ item.product.price * item.quantity }} تومان</td>
+          <td>
+            <form action="{{ url_for('remove_from_cart', item_id=item.id) }}" method="POST">
+              <button type="submit" class="btn btn-sm btn-outline-danger">❌</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+<div class="text-end mt-4">
+    <h5>💰 جمع کل: <strong>{{ total }} تومان</strong></h5>
+
+    <form action="{{ url_for('checkout_test') }}" method="POST" class="d-inline-block mt-2">
+      <button type="submit" class="btn btn-success">✅ پرداخت و نهایی‌سازی</button>
+    </form>
+  </div>
+
+
+  {% else %}
+    <div class="alert alert-info">سبد خرید شما خالی است.</div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>ورود ادمین</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<!-- templates/login.html -->
+{% extends 'base.html' %}
+{% block title %}ورود ادمین{% endblock %}
+{% block content %}
+<div class="card p-4 mx-auto" style="max-width: 400px;">
+    <h4 class="text-center mb-4">🔐 ورود به پنل مدیریت</h4>
+    <form method="post">
+        <div class="mb-3">
+            <label class="form-label">نام کاربری:</label>
+            <input type="text" name="username" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">رمز عبور:</label>
+            <input type="password" name="password" class="form-control" required>
+        </div>
+        <button class="btn btn-primary w-100"><i class="bi bi-box-arrow-in-right"></i> ورود</button>
+    </form>
+</div>
+{% endblock %}
+
+</body>
+</html>

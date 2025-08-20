@@ -1,0 +1,40 @@
+<!-- templates/add_product.html -->
+{% extends 'base.html' %}
+{% block title %}افزودن محصول جدید{% endblock %}
+
+{% block content %}
+<h2>افزودن محصول جدید</h2>
+
+<form method="POST" enctype="multipart/form-data" class="mt-4">
+    <div class="mb-3">
+        <label for="name" class="form-label">نام محصول</label>
+        <input type="text" id="name" name="name" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="price" class="form-label">قیمت (تومان)</label>
+        <input type="number" id="price" name="price" step="0.01" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="category" class="form-label">دسته‌بندی</label>
+        <select id="category" name="category" class="form-select" required>
+            <option value="" disabled selected>دسته‌بندی را انتخاب کنید</option>
+            {% for cat in categories %}
+            <option value="{{ cat }}">{{ cat }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="image" class="form-label">تصویر محصول</label>
+        <input type="file" id="image" name="image" accept="image/*" class="form-control" required>
+    </div>
+    <div class="mb-3">
+    <label for="description" class="form-label">توضیحات محصول</label>
+    <textarea class="form-control" name="description" rows="4" placeholder="مثلاً ویژگی‌ها، موارد مصرف، برند و..."></textarea>
+</div>
+
+    <button type="submit" class="btn btn-primary">افزودن محصول</button>
+</form>
+{% endblock %}
