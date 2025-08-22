@@ -116,23 +116,27 @@ def dashboard():
     if category_filter:
         products_query = products_query.filter_by(category=category_filter)
 
-    # ✅ مرتب‌سازی
+    # مرتب‌سازی
     if sort == 'price_asc':
         products_query = products_query.order_by(Product.price.asc())
     elif sort == 'price_desc':
         products_query = products_query.order_by(Product.price.desc())
-    if current_user.role == 'admin':
+
+    categories = Category.query.all()  # این خط رو اضافه کردم
+
+    if current_user.is_authenticated and current_user.role == 'admin':
         total_products = Product.query.count()
         total_users = User.query.count()
         total_orders = Order.query.count()
         total_income = db.session.query(db.func.sum(Order.total_price)).scalar() or 0
+        products = products_query.all()
         return render_template('dashboard.html', products=products, categories=categories,
                                total_products=total_products, total_users=total_users,
                                total_orders=total_orders, total_income=total_income)
 
     products = products_query.all()
-    categories = Category.query.all()
     return render_template('dashboard.html', products=products, categories=categories, sort=sort)
+
 
 
 @app.route('/')
@@ -147,6 +151,9 @@ def index():
 
 @app.route('/add_product', methods=['GET', 'POST'])
 def add_product():
+    if not is_admin():
+        abort(403)
+
     if request.method == 'POST':
         name = request.form.get('name')
         price = request.form.get('price')
@@ -179,8 +186,7 @@ def add_product():
             return redirect(url_for('dashboard'))
         else:
             flash('لطفاً همه فیلدها را کامل کنید.', 'danger')
-        if not is_admin():
-            abort(403)
+
     categories = [c.name for c in Category.query.all()]
     return render_template('add_product.html', categories=categories)
 
@@ -301,13 +307,13 @@ def remove_from_cart(item_id):
     return redirect(url_for('view_cart'))
 
 
-@app.route('/checkout', methods=['POST'])
-@login_required
-def checkout1():
-    CartItem.query.delete()
-    db.session.commit()
-    flash('پرداخت با موفقیت انجام شد!', 'success')
-    return redirect(url_for('shop'))
+# @app.route('/checkout', methods=['POST'])
+# @login_required
+# def checkout1():
+#     CartItem.query.delete()
+#     db.session.commit()
+#     flash('پرداخت با موفقیت انجام شد!', 'success')
+#     return redirect(url_for('shop'))
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -335,7 +341,7 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-        flash('ثبت‌نام با موفقیت انجام شد.', 'success')
+        flash('ثبت‌ نام با موفقیت انجام شد.', 'success')
         return redirect(url_for('login'))
 
     return render_template('register.html')
@@ -347,21 +353,35 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['username'].strip()
-        password = request.form['password']
-        user = User.query.filter_by(username=username).first()
+        username = request.form.get('username', '').strip()
+        password = request.form.get('password', '')
 
-        if user and check_password_hash(user.password, password):
-            login_user(user, remember=True)  # این خط تغییر کرد 👈
+        print(f"Login attempt: username={username}")
+
+        user = User.query.filter_by(username=username).first()
+        if not user:
+            print("User not found")
+            flash('نام کاربری یا رمز اشتباه است.', 'danger')
+            return redirect(url_for('login'))
+
+        if not password:
+            print("Empty password")
+            flash('رمز عبور را وارد کنید.', 'danger')
+            return redirect(url_for('login'))
+
+        if check_password_hash(user.password, password):
+            login_user(user, remember=True)
             flash('ورود موفقیت‌آمیز بود.', 'success')
             if user.role == 'admin':
                 return redirect(url_for('dashboard'))
             else:
                 return redirect(url_for('shop'))
         else:
+            print("Wrong password")
             flash('نام کاربری یا رمز اشتباه است.', 'danger')
 
     return render_template('login1.html')
+
 
 
 
@@ -528,5 +548,6 @@ with app.app_context():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(debug=True, host="0.0.0.0", port=port)
 

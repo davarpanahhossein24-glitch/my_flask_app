@@ -8,6 +8,8 @@
 {% block content %}
 <h4 class="mb-4">✏️ ویرایش {{ product.name }}</h4>
 <form method="post" enctype="multipart/form-data" class="card p-4">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
     <div class="mb-3">
         <label class="form-label">نام محصول:</label>
         <input type="text" name="name" value="{{ product.name }}" class="form-control" required>

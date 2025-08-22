@@ -4,6 +4,7 @@
 {% block content %}
 <div class="container mt-4">
   <h2 class="mb-4">🛒 سبد خرید</h2>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
   {% if items %}
   <div class="table-responsive">

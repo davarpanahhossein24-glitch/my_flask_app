@@ -6,6 +6,8 @@
 <h2>افزودن محصول جدید</h2>
 
 <form method="POST" enctype="multipart/form-data" class="mt-4">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
     <div class="mb-3">
         <label for="name" class="form-label">نام محصول</label>
         <input type="text" id="name" name="name" class="form-control" required>
