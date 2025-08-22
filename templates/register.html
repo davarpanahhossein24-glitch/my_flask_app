@@ -2,8 +2,12 @@
 {% block title %}ثبت‌نام{% endblock %}
 
 {% block content %}
+
 <h3 class="mb-4">ثبت‌نام</h3>
-<form method="POST">
+<form method="POST" action="{{ url_for('register') }}">
+    {{ csrf_token() }}
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
     <div class="mb-3">
         <label for="username" class="form-label">نام کاربری</label>
         <input type="text" name="username" id="username" class="form-control" required>
@@ -17,4 +21,5 @@
     <button type="submit" class="btn btn-primary">ثبت‌نام</button>
     <a href="{{ url_for('login') }}" class="btn btn-link">قبلاً ثبت‌نام کرده‌اید؟ ورود</a>
 </form>
+
 {% endblock %}

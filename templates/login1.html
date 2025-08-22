@@ -4,6 +4,7 @@
 {% block content %}
 <h3 class="mb-4">ورود</h3>
 <form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <div class="mb-3">
         <label for="username" class="form-label">نام کاربری</label>
         <input type="text" name="username" id="username" class="form-control" required>
