@@ -527,7 +527,7 @@ with app.app_context():
     db.create_all()
 
     # دسته‌بندی‌های پیش‌فرض
-    default_categories = ['وسیله نقلیه', 'پوشاک', 'خوراکی', 'لوازم خانگی', 'الکترونیکی', 'دیجیتال']
+    default_categories = ['وسیله نقلیه', 'پوشاک', 'خوراکی', 'لوازم خانگی', 'الکترونیکی', 'دیجیتال', 'ورزشی']
     existing_categories = [cat.name for cat in Category.query.all()]
 
     for cat in default_categories:
