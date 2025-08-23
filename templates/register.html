@@ -13,10 +13,38 @@
         <input type="text" name="username" id="username" class="form-control" required>
     </div>
 
-    <div class="mb-3">
-        <label for="password" class="form-label">رمز عبور</label>
-        <input type="password" name="password" id="password" class="form-control" required>
-    </div>
+    <!-- رمز عبور -->
+<div class="mb-3">
+    <label for="password" class="form-label">رمز عبور</label>
+    <input type="password" id="password" name="password" class="form-control" required>
+</div>
+
+<!-- تکرار رمز عبور (اختیاری) -->
+<div class="mb-3">
+    <label for="confirm_password" class="form-label">تکرار رمز عبور</label>
+    <input type="password" id="confirm_password" name="confirm_password" class="form-control" required>
+</div>
+
+<!-- چک باکس نمایش رمز عبور -->
+<div class="mb-3 form-check">
+    <input type="checkbox" class="form-check-input" id="showPassword">
+    <label class="form-check-label" for="showPassword">نمایش رمز عبور</label>
+</div>
+
+<script>
+document.getElementById('showPassword').addEventListener('change', function() {
+    const pwdField = document.getElementById('password');
+    const confirmPwdField = document.getElementById('confirm_password');
+    if (this.checked) {
+        pwdField.type = 'text';
+        if(confirmPwdField) confirmPwdField.type = 'text';
+    } else {
+        pwdField.type = 'password';
+        if(confirmPwdField) confirmPwdField.type = 'password';
+    }
+});
+</script>
+
 
     <button type="submit" class="btn btn-primary">ثبت‌نام</button>
     <a href="{{ url_for('login') }}" class="btn btn-link">قبلاً ثبت‌نام کرده‌اید؟ ورود</a>

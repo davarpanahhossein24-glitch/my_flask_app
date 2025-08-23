@@ -4,19 +4,43 @@
 {% block content %}
 <h3 class="mb-4">ورود</h3>
 <form method="POST">
+    {{ csrf_token() }}
+    <!-- فیلد نام کاربری -->
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <div class="mb-3">
         <label for="username" class="form-label">نام کاربری</label>
-        <input type="text" name="username" id="username" class="form-control" required>
+        <input type="text" id="username" name="username" class="form-control" required>
     </div>
 
+    <!-- فیلد رمز عبور -->
     <div class="mb-3">
         <label for="password" class="form-label">رمز عبور</label>
-        <input type="password" name="password" id="password" class="form-control" required>
+        <input type="password" id="password" name="password" class="form-control" required>
     </div>
+
+    <!-- چک باکس نمایش رمز عبور -->
+    <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" id="showPassword">
+        <label class="form-check-label" for="showPassword">نمایش رمز عبور</label>
+    </div>
+
 
     <button type="submit" class="btn btn-success">ورود</button>
     <a href="{{ url_for('register') }}" class="btn btn-link">حساب ندارید؟ ثبت‌نام</a>
+
 </form>
+
+<script>
+document.getElementById('showPassword').addEventListener('change', function() {
+    const pwdField = document.getElementById('password');
+    if (this.checked) {
+        pwdField.type = 'text';
+    } else {
+        pwdField.type = 'password';
+    }
+});
+</script>
+
+
 {% endblock %}
 

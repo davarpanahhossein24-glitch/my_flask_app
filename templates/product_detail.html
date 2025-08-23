@@ -15,9 +15,13 @@
         <p class="text-muted">{{ product.description or "توضیحی ثبت نشده." }}</p>
 
         <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <button class="btn btn-success mt-3">➕ افزودن به سبد</button>
         </form>
     </div>
 </div>
+
+
+
 {% endblock %}
 

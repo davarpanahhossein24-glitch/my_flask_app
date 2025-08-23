@@ -1,15 +1,14 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session, send_from_directory
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, render_template, request, redirect, url_for, flash, session, send_from_directory, abort
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user, UserMixin
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from flask_migrate import Migrate
-from flask import abort
 from datetime import timedelta
 from datetime import datetime
 from flask_wtf import CSRFProtect
 from flask import jsonify
+from flask_sqlalchemy import SQLAlchemy
 
 # ---------- تنظیمات اولیه ----------
 app = Flask(__name__)
@@ -40,9 +39,12 @@ class Product(db.Model):
     price = db.Column(db.Float, nullable=False)
     category = db.Column(db.String(50))
     image = db.Column(db.String(200), nullable=True)
-    description = db.Column(db.Text, nullable=True)  # ✅ اضافه شد
-    expiration_date = db.Column(db.Date, nullable=True)  # ✅ تاریخ انقضا
-    stock = db.Column(db.Integer, default=0)  # ✅ موجودی انبار
+    description = db.Column(db.Text, nullable=True)
+    expiration_date = db.Column(db.Date, nullable=True)
+    stock = db.Column(db.Integer, default=0)
+
+    # 👇 این رابطه باعث میشه توی Comment دسترسی به product داشته باشیم
+    # comments = db.relationship('Comment', backref='product', lazy=True)
 
 
 class Category(db.Model):
@@ -92,6 +94,20 @@ class Favorite(db.Model):
 
 
     product = db.relationship('Product')
+
+
+# class Comment(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+#     product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)  # این خط باید فعال باشه
+#     rating = db.Column(db.Integer, nullable=False)  # از 1 تا 5
+#     content = db.Column(db.Text, nullable=False)
+#     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+#
+#     user = db.relationship('User')  # فقط رابطه با کاربر نگه داشته شده
+#     # ❌ این خط باید حذف بشه:
+#     # product = db.relationship('Product')
+
 
 # ---------- بارگذاری کاربر ----------
 @login_manager.user_loader
@@ -194,15 +210,15 @@ def add_product():
 @app.route('/edit/<int:product_id>', methods=['GET', 'POST'])
 def edit_product(product_id):
     product = Product.query.get_or_404(product_id)
-    categories = ['الکترونیکی', 'پوشاک', 'خوراکی', 'لوازم خانه']
+    categories = ['وسیله نقلیه', 'پوشاک', 'خوراکی', 'لوازم خانگی', 'الکترونیکی', 'دیجیتال', 'ورزشی']
 
     if request.method == 'POST':
         product.name = request.form['name']
         product.price = request.form['price']
         product.category = request.form['category']
 
-        image_file = request.files['image']
-        if image_file:
+        image_file = request.files.get('image')
+        if image_file and image_file.filename != '':
             image_filename = secure_filename(image_file.filename)
             image_path = os.path.join(app.config['UPLOAD_FOLDER'], image_filename)
             image_file.save(image_path)
@@ -401,6 +417,7 @@ def uploaded_file(filename):
 @app.route('/product/<int:product_id>')
 def product_detail(product_id):
     product = Product.query.get_or_404(product_id)
+    # حالا product.comments در قالب استفاده می‌شود
     return render_template('product_detail.html', product=product)
 
 def is_admin():
@@ -518,6 +535,55 @@ def favorite(product_id):
         db.session.commit()
         return jsonify({'status': 'added'})
 
+
+# @app.route('/product/<int:product_id>/add_comment', methods=['POST'])
+# @login_required
+# def add_comment(product_id):
+#     rating = request.form.get('rating', type=int)
+#     content = request.form.get('content', '').strip()
+#
+#     if not rating or rating < 1 or rating > 5 or not content:
+#         flash('لطفا امتیاز و نظر خود را به درستی وارد کنید.', 'danger')
+#         return redirect(url_for('product_detail', product_id=product_id))
+#
+#     comment = Comment(user_id=current_user.id, product_id=product_id, rating=rating, content=content)
+#     db.session.add(comment)
+#     db.session.commit()
+#
+#     flash('نظر شما ثبت شد. ممنون از بازخورد شما!', 'success')
+#     return redirect(url_for('product_detail', product_id=product_id))
+
+
+# @app.route('/comment/edit/<int:comment_id>', methods=['GET', 'POST'])
+# @login_required
+# def edit_comment(comment_id):
+#     comment = Comment.query.get_or_404(comment_id)
+#     if comment.user_id != current_user.id:
+#         abort(403)  # دسترسی غیرمجاز
+#
+#     if request.method == 'POST':
+#         content = request.form.get('content')
+#         rating = int(request.form.get('rating'))
+#         comment.content = content
+#         comment.rating = rating
+#         db.session.commit()
+#         flash('نظر شما با موفقیت ویرایش شد.', 'success')
+#         return redirect(url_for('some_page'))
+#
+#     return render_template('edit_comment.html', comment=comment)
+#
+#
+# @app.route('/comment/delete/<int:comment_id>', methods=['POST'])
+# @login_required
+# def delete_comment(comment_id):
+#     comment = Comment.query.get_or_404(comment_id)
+#     if comment.user_id != current_user.id:
+#         abort(403)  # دسترسی غیرمجاز
+#
+#     db.session.delete(comment)
+#     db.session.commit()
+#     flash('نظر شما حذف شد.', 'success')
+#     return redirect(url_for('some_page'))
 # ---------- اضافه کردن دسته‌بندی‌های پیش‌فرض ----------
 # در فایل init:
 ADMIN_USERNAME = 'admin'

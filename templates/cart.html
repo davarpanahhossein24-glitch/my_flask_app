@@ -48,6 +48,7 @@
     <h5>💰 جمع کل: <strong>{{ total }} تومان</strong></h5>
 
     <form action="{{ url_for('checkout_test') }}" method="POST" class="d-inline-block mt-2">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <button type="submit" class="btn btn-success">✅ پرداخت و نهایی‌سازی</button>
     </form>
   </div>
